@@ -3,7 +3,7 @@ version: '3.8'
 services:
 
   pgsql:
-    container_name: 'pdsql'
+    container_name: 'pgsql'
     image: postgres:13.3
     ports:
       - "5433:5432"
