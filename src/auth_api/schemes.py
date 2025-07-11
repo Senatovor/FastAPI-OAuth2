@@ -1,10 +1,14 @@
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 
-class RegistrateUser(BaseModel):
-    """Форма регистрации пользователя"""
+class SystemUser(BaseModel):
+    """Форма юзера"""
     username: str = Field(..., description='Имя пользователя')
     email: EmailStr = Field(..., description='Почта пользователя')
+
+
+class RegistrateUser(SystemUser):
+    """Форма регистрации пользователя"""
     password: SecretStr = Field(..., description='Введенный пароль, в дальнейшем хэшируется')
 
 

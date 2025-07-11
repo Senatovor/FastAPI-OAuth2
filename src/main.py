@@ -5,6 +5,7 @@ from loguru import logger
 from src.log import setup_logger
 from src.config import config
 from src.auth_api.router import auth_api_router
+from src.users.router import users_router
 
 
 def create_app() -> FastAPI:
@@ -31,6 +32,7 @@ def create_app() -> FastAPI:
         allow_headers=["*"]
     )
     app.include_router(auth_api_router)     # Установка роутера авторизации
+    app.include_router(users_router)
     return app
 
 
