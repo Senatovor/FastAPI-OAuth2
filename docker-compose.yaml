@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+
+  pgsql:
+    container_name: 'pdsql'
+    image: postgres:13.3
+    ports:
+      - "5433:5432"
+    env_file:
+      .env
+    volumes:
+      - pgsql_data:/var/lib/pgsql
+    restart: unless-stopped
+
+  app:
+    container_name: 'app'
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/project
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONPATH=/project
+    command: python src/main.py
+
+
+volumes:
+  pgsql_data:
