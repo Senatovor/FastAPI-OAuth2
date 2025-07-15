@@ -11,8 +11,7 @@ T = TypeVar('T', bound=Base)
 
 
 class BaseService(Generic[T]):
-    """
-    Базовый сервис для CRUD-операций с SQLAlchemy моделями.
+    """Базовый сервис для CRUD-операций с SQLAlchemy моделями.
 
     Реализует стандартные операции создания, чтения, обновления и удаления записей
     для любой модели SQLAlchemy. Работает через асинхронные сессии и поддерживает
@@ -35,11 +34,7 @@ class BaseService(Generic[T]):
     model = type[T]
 
     def __init__(self):
-        """
-        Инициализация базового сервиса.
-
-        1. Проверяет наличие указанной модели
-        2. Вызывает исключение если модель не определена
+        """Инициализация базового сервиса.
 
         Raises:
             ValueError: Если модель не указана в дочернем классе
@@ -49,12 +44,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def add(cls, session: AsyncSession, values: BaseModel) -> model:
-        """
-        Создает новую запись в базе данных.
-
-        1. Конвертирует Pydantic модель в словарь
-        2. Создает новый экземпляр модели
-        3. Добавляет в сессию и сохраняет
+        """Создает новую запись в базе данных.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -80,12 +70,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def add_all(cls, session: AsyncSession, instances: list[BaseModel]) -> Sequence[model]:
-        """
-        Массово создает записи в базе данных.
-
-        1. Конвертирует список Pydantic моделей в словари
-        2. Создает список экземпляров модели
-        3. Добавляет все в сессию и сохраняет
+        """Массово создает записи в базе данных.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -111,8 +96,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def find_by_id(cls, session: AsyncSession, index: int | UUID) -> model:
-        """
-        Находит запись по первичному ключу.
+        """Находит запись по первичному ключу.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -134,12 +118,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def find_one_by(cls, session: AsyncSession, filters: BaseModel | None = None) -> model:
-        """
-        Находит одну запись по фильтрам.
-
-        1. Конвертирует Pydantic модель фильтров в словарь
-        2. Выполняет запрос с фильтрацией
-        3. Возвращает первую найденную запись
+        """Находит одну запись по фильтрам.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -168,12 +147,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def find_all(cls, session: AsyncSession, filters: BaseModel | None = None) -> Sequence[model]:
-        """
-        Находит все записи по фильтрам.
-
-        1. Конвертирует Pydantic модель фильтров в словарь
-        2. Выполняет запрос с фильтрацией
-        3. Возвращает все найденные записи
+        """Находит все записи по фильтрам.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -202,12 +176,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def update_by_id(cls, session: AsyncSession, index: int | UUID, values: BaseModel):
-        """
-        Обновляет запись по ID.
-
-        1. Находит запись по ID
-        2. Обновляет атрибуты из Pydantic модели
-        3. Сохраняет изменения
+        """Обновляет запись по ID.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -231,12 +200,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def update_all(cls, session: AsyncSession, values: BaseModel, filters: BaseModel | None = None):
-        """
-        Массово обновляет записи по фильтрам.
-
-        1. Конвертирует Pydantic модели в словари
-        2. Выполняет массовое обновление
-        3. Сохраняет изменения
+        """Массово обновляет записи по фильтрам.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -267,8 +231,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def delete_by_id(cls, session: AsyncSession, index: int | UUID):
-        """
-        Удаляет запись по ID.
+        """Удаляет запись по ID.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -289,12 +252,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def delete_all(cls, session, filters: BaseModel | None = None):
-        """
-        Массово удаляет записи по фильтрам.
-
-        1. Конвертирует Pydantic модель фильтров в словарь
-        2. Выполняет запрос с фильтрацией
-        3. Удаляет все найденные записи
+        """Массово удаляет записи по фильтрам.
 
         Args:
             session: Асинхронная сессия SQLAlchemy
@@ -319,12 +277,7 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def count(cls, session: AsyncSession, filters: BaseModel | None = None):
-        """
-        Подсчитывает количество записей модели в базе данных с возможностью фильтрации.
-
-        1. Конвертирует Pydantic модель фильтров в словарь (если передана)
-        2. Формирует SQL-запрос с подсчетом записей по указанным фильтрам
-        3. Возвращает количество найденных записей
+        """Подсчитывает количество записей модели в базе данных с возможностью фильтрации.
 
         Args:
             session: Асинхронная сессия SQLAlchemy для работы с БД

@@ -5,8 +5,7 @@ from datetime import datetime
 
 
 class Base(AsyncAttrs, DeclarativeBase):
-    """
-    Абстрактный базовый класс для всех моделей SQLAlchemy
+    """Абстрактный базовый класс для всех моделей SQLAlchemy
 
     Attributes:
         id: ID таблицы

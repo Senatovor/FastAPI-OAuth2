@@ -5,37 +5,35 @@ from loguru import logger
 
 
 class Config(BaseSettings):
-    """
-    Основной класс конфигурации приложения.
+    """Основной класс конфигурации приложения.
 
     Загружает настройки из .env файла или переменных окружения.
-    Все чувствительные данные должны быть указаны в .env файле.
 
     Attributes:
-        DB_HOST (str): Хост базы данных
-        DB_PORT (str): Порт базы данных
-        POSTGRES_DB (str): Имя базы данных
-        POSTGRES_USER (str): Пользователь БД
-        POSTGRES_PASSWORD (str): Пароль пользователя БД
-        SECRET_KEY (str): Секретный ключ для JWT
-        ALGORITHM (str): Алгоритм шифрования JWT
-        ACCESS_TOKEN_EXPIRE (int): Время жизни access токена (в минутах)
-        TITLE (str): Имя проекта
-        VERSION (str): Версия проекта
-        DESCRIPTION (str): Описание проекта (можно использовать синтаксис .md файлов):
-        NAME_AUTHOR (str or None): Автор проекта
-        URL_AUTHOR (str or None): Ссылка на автора проекта
-        EMAIL_AUTHOR (str or None): Почта автора проекта
-        DOCS_URL (str or None): http путь к документации docs
-        REDOC_URL (str or None): http путь к документации redocs
-        ROOT_PATH (str or None): http корневой путь проекта
-        ROTATION (str or None): При каком условии происходит ротация логов
-        LEVEL (str or None): Уровень логирования
-        COMPRESSION (str or None): Формат сжатия логов
-        BACKTRACE (bool): Включает подробный трейсбек при ошибках
-        DIAGNOSE (bool): Добавляет информацию о переменных в стектрейс
-        ENQUEUE (bool): Асинхронная запись логов
-        CATCH (bool): Перехватывание исключения
+        DB_HOST: Хост базы данных
+        DB_PORT: Порт базы данных
+        POSTGRES_DB: Имя базы данных
+        POSTGRES_USER: Пользователь БД
+        POSTGRES_PASSWORD: Пароль пользователя БД
+        SECRET_KEY: Секретный ключ для JWT
+        ALGORITHM: Алгоритм шифрования JWT
+        ACCESS_TOKEN_EXPIRE: Время жизни access токена (в минутах)
+        TITLE: Имя проекта
+        VERSION: Версия проекта
+        DESCRIPTION: Описание проекта (можно использовать синтаксис .md файлов):
+        NAME_AUTHOR: Автор проекта
+        URL_AUTHOR: Ссылка на автора проекта
+        EMAIL_AUTHOR: Почта автора проекта
+        DOCS_URL: http путь к документации docs
+        REDOC_URL: http путь к документации redocs
+        ROOT_PATH: http корневой путь проекта
+        ROTATION: При каком условии происходит ротация логов
+        LEVEL: Уровень логирования
+        COMPRESSION: Формат сжатия логов
+        BACKTRACE: Включает подробный трейсбек при ошибках
+        DIAGNOSE: Добавляет информацию о переменных в стектрейс
+        ENQUEUE: Асинхронная запись логов
+        CATCH: Перехватывание исключения
     """
     # Настройки базы данных
     DB_HOST: str
@@ -73,16 +71,7 @@ class Config(BaseSettings):
     )
 
     def get_db_url(self) -> str:
-        """
-        Генерирует URL для подключения к PostgreSQL с использованием asyncpg.
-
-        1. Формирует строку подключения из параметров
-        2. Логирует факт генерации (без пароля)
-        3. Возвращает готовый URL
-
-        Returns:
-            str: Строка подключения к базе данных
-        """
+        """Генерирует URL для подключения к PostgreSQL с использованием asyncpg."""
         return (f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@'
                 f'{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}')
 

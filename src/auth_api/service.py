@@ -11,7 +11,15 @@ class UserService(BaseService):
 
     @classmethod
     async def find_by_username(cls, session: AsyncSession, username: str) -> model:
-        """Нахождение юзера по username"""
+        """Нахождение юзера по username.
+
+        Args:
+            session: Aссинхронная сессия базы данных
+            username: Логин пользователя
+
+        Returns:
+            Объект пользователя
+        """
         try:
             query = select(cls.model).filter_by(username=username)
             result = await session.execute(query)
@@ -28,9 +36,6 @@ class UserService(BaseService):
             password: str
     ):
         """Получает и аутентифицирует пользователя по логину и паролю.
-
-        1. Ищет пользователя по username
-        2. Проверяет соответствие пароля
 
         Args:
             session: Aссинхронная сессия базы данных
