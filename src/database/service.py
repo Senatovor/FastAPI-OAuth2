@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from uuid import UUID
 from loguru import logger
 
-from src.database.model import Base
+from ..database.model import Base
 
 T = TypeVar('T', bound=Base)
 

@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.database.service import BaseService
+from ..database.service import BaseService
 from .models import User
 from .utils import verify_password
 

@@ -2,7 +2,7 @@ import logging
 from loguru import logger
 from pathlib import Path
 
-from src.config import config
+from .config import config
 
 
 class InterceptHandler(logging.Handler):

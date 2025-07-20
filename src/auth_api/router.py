@@ -5,10 +5,10 @@ from sqlalchemy.exc import IntegrityError
 from typing import Annotated
 from loguru import logger
 
-from src.config import config
-from src.utils import error_response_docs, ok_response_docs
-from src.exceptions import ServerException
-from src.database.session import SessionDepends
+from ..config import config
+from ..utils import error_response_docs, ok_response_docs
+from ..exceptions import ServerException
+from ..database.session import SessionDepends
 from .service import UserService
 from .schemes import RegistrateUser
 from .utils import get_password_hash, create_token

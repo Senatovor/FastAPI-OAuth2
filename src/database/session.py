@@ -6,7 +6,7 @@ from typing import Annotated
 from loguru import logger
 from datetime import datetime
 
-from src.config import config
+from ..config import config
 
 SQL_DATABASE_URL = config.database_url
 
