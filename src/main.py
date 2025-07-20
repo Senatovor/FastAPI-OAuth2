@@ -2,6 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
+
 from src.log import setup_logger
 from src.config import config
 from src.auth_api.router import auth_api_router
@@ -9,8 +10,7 @@ from src.users.router import users_router
 
 
 def create_app() -> FastAPI:
-    """
-    Фабрика для создания и настройки экземпляра FastAPI приложения.
+    """Фабрика для создания и настройки экземпляра FastAPI приложения.
 
     Returns:
         FastAPI: Настроенный экземпляр FastAPI приложения
@@ -18,8 +18,8 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=config.TITLE,
         version=config.VERSION,
-        description=config.get_description(),
-        contact=config.get_contact(),
+        description=config.description_project,
+        contact=config.contact_project,
         docs_url=config.DOCS_URL,
         redoc_url=config.REDOC_URL,
         root_path=config.ROOT_PATH,

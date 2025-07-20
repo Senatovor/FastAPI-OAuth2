@@ -5,6 +5,7 @@ from typing import Sequence, TypeVar, Generic
 from pydantic import BaseModel
 from uuid import UUID
 from loguru import logger
+
 from src.database.model import Base
 
 T = TypeVar('T', bound=Base)

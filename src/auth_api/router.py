@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.exc import IntegrityError
 from typing import Annotated
 from loguru import logger
+
 from src.config import config
 from src.utils import error_response_docs, ok_response_docs
 from src.exceptions import ServerException

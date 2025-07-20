@@ -5,9 +5,10 @@ from fastapi import Depends
 from typing import Annotated
 from loguru import logger
 from datetime import datetime
+
 from src.config import config
 
-SQL_DATABASE_URL = config.get_db_url()
+SQL_DATABASE_URL = config.database_url
 
 engine = create_async_engine(url=SQL_DATABASE_URL)
 session_factory = async_sessionmaker(engine, expire_on_commit=False)

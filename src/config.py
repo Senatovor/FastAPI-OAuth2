@@ -70,16 +70,19 @@ class Config(BaseSettings):
         env_file_encoding='utf-8'
     )
 
-    def get_db_url(self) -> str:
+    @property
+    def database_url(self) -> str:
         """Генерирует URL для подключения к PostgreSQL с использованием asyncpg."""
         return (f'postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@'
                 f'{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}')
 
-    def get_description(self) -> str:
+    @property
+    def description_project(self) -> str:
         """Возвращает описание проекта"""
         return self.DESCRIPTION or None
 
-    def get_contact(self) -> dict:
+    @property
+    def contact_project(self) -> dict:
         """Возвращает контактные данные автора проекта"""
         return {
             "name": self.NAME_AUTHOR or None,

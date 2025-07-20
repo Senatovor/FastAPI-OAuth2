@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, func
+from sqlalchemy import Integer, func, TIMESTAMP
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column, class_mapper
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from datetime import datetime
@@ -20,9 +20,11 @@ class Base(AsyncAttrs, DeclarativeBase):
         autoincrement=True
     )
     created_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP,
         server_default=func.now()
     )
     updated_at: Mapped[datetime] = mapped_column(
+        TIMESTAMP,
         server_default=func.now(),
         onupdate=func.now()
     )

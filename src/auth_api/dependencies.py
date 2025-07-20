@@ -2,6 +2,7 @@ from fastapi import Depends
 from typing import Annotated
 from loguru import logger
 from jose import JWTError
+
 from src.database.session import SessionDepends
 from .service import UserService
 from .utils import oauth2_scheme, decode_jwt
