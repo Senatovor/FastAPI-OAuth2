@@ -23,7 +23,7 @@ async def get_current_user(
         Объект пользователя
 
     Raises:
-        NotAuthException: Если токен невалидный или пользователь не найден
+        NotAuthException(401): Если токен невалидный или пользователь не найден
     """
     try:
         payload = decode_jwt(token)

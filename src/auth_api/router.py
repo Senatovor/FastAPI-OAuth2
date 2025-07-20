@@ -56,7 +56,7 @@ async def login_with_token(
         Объект Token с access токеном
 
     Raises:
-        NotAuthException: HTTP 401 если аутентификация не удалась
+        NotAuthException(401): HTTP 401 если аутентификация не удалась
     """
     user = await UserService.get_authenticate_user(
         session,
@@ -121,8 +121,8 @@ async def register(
         JSONResponse с сообщением об успешной регистрации
 
     Raises:
-        AlreadyExistException: Если пользователь уже существует
-        ServerException: При других ошибках базы данных
+        AlreadyExistException(409): Если пользователь уже существует
+        ServerException(500): При других ошибках базы данных
     """
     try:
         register_user.password = get_password_hash(register_user.password)
