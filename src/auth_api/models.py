@@ -11,14 +11,9 @@ class User(Base):
         username: Логин пользователя. Обязательное поле.
         email: Электронная почта пользователя. Должна быть уникальной.
         password: Хэшированный пароль пользователя. Хранится в зашифрованном виде.
-        role: Роль пользователя в системе. По умолчанию 'user'.
+        is_superuser: Роль пользователя в системе, является ли он админом.
     """
     username: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(nullable=False, unique=True)
     password: Mapped[str] = mapped_column(nullable=False)
-
-    role: Mapped[str] = mapped_column(
-        default='user',
-        server_default=text('user'),
-        nullable=False,
-    )
+    is_superuser: Mapped[bool] = mapped_column(default=False, server_default=text('false'), nullable=False)

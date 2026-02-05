@@ -1,7 +1,8 @@
-from sqlalchemy import Integer, func, TIMESTAMP
+from sqlalchemy import func, TIMESTAMP, UUID
 from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column, class_mapper
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from datetime import datetime
+import uuid
 
 
 class Base(AsyncAttrs, DeclarativeBase):
@@ -14,10 +15,10 @@ class Base(AsyncAttrs, DeclarativeBase):
     """
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(
-        Integer,
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
         primary_key=True,
-        autoincrement=True
+        default=uuid.uuid4
     )
     created_at: Mapped[datetime] = mapped_column(
         TIMESTAMP,

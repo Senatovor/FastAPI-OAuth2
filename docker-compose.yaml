@@ -11,18 +11,43 @@ services:
       .env
     volumes:
       - pgsql_data:/var/lib/pgsql
-    restart: unless-stopped
+    networks:
+      - app-network
 
   app:
     container_name: 'app'
     build:
       dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    env_file:
+      - .env
     volumes:
       - ./:/project
-    ports:
-      - "5000:5000"
     command: python src/main.py
+    networks:
+      - app-network
+
+
+  initial_data:
+    container_name: 'initial_data'
+    build:
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: "no"
+    depends_on:
+      - pgsql
+    volumes:
+      - ./:/project
+    command: python src/initial_data.py
+    networks:
+      - app-network
 
 
 volumes:
   pgsql_data:
+
+networks:
+  app-network:
+    driver: bridge

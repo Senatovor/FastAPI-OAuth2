@@ -1,54 +1,60 @@
-from sqlalchemy import select
+from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import HTTPException, status
+from fastapi.responses import JSONResponse
+from loguru import logger
+from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import IntegrityError
 
-from ..database.service import BaseService
 from .models import User
-from .utils import verify_password
+from .handler import AuthHandler
+from .schemes import Token, RegistrateUser
+from ..config import config
+from ..database.executer import sql_manager
 
 
-class UserService(BaseService):
-    model = User
-
-    @classmethod
-    async def find_by_username(cls, session: AsyncSession, username: str) -> model:
-        """Нахождение юзера по username.
-
-        Args:
-            session: Aссинхронная сессия базы данных
-            username: Логин пользователя
-
-        Returns:
-            Объект пользователя
-        """
+class AuthService:
+    @staticmethod
+    async def get_token(form_data: OAuth2PasswordRequestForm, db_session: AsyncSession):
         try:
-            query = select(cls.model).filter_by(username=username)
-            result = await session.execute(query)
-            find_object = result.scalar_one_or_none()
-            return find_object
-        except SQLAlchemyError as e:
-            raise e
+            user = await sql_manager(
+                select(User).where(User.username == form_data.username)
+            ).scalar_one_or_none(db_session)
+            if not user:
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Не верные username или пароль')
+            if not AuthHandler.verify_password(form_data.password, user.password):
+                raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Не верные username или пароль')
+            access_token = await AuthHandler.create_token(
+                data={
+                    "sub": user.username,
+                },
+                token_type='accessToken',
+                timedelta_minutes=config.auth_config.ACCESS_TOKEN_EXPIRE
+            )
+            return Token(
+                access_token=access_token,
+                token_type='Bearer'
+            )
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Ошибка сервера')
 
-    @classmethod
-    async def get_authenticate_user(
-            cls,
-            session: AsyncSession,
-            username: str,
-            password: str
-    ):
-        """Получает и аутентифицирует пользователя по логину и паролю.
+    @staticmethod
+    async def register(register_user: RegistrateUser, db_session: AsyncSession):
+        try:
+            register_user.password = await AuthHandler.get_password_hash(register_user.password)
+            user = await sql_manager(
+                insert(User).values(**register_user.model_dump()).returning(User)
+            ).scalar_one_or_none(db_session)
+            logger.info(f'Пользователь {user.username} зарегистрирован')
+            return JSONResponse(
+                content={"message": 'Вы авторизированны'},
+                status_code=status.HTTP_200_OK
+            )
 
-        Args:
-            session: Aссинхронная сессия базы данных
-            username: Логин пользователя
-            password: Пароль в чистом виде
-
-        Returns:
-            Объект пользователя если аутентификация успешна, иначе False
-        """
-        user = await cls.find_by_username(session, username)
-        if not user:
-            return False
-        if not verify_password(password, user.password):
-            return False
-        return user
+        except IntegrityError as e:
+            if "unique constraint" in str(e.orig).lower():
+                logger.error('Такой пользователь уже есть')
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Конфликт: данные уже существуют")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ошибка сервера")
+        except Exception:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Ошибка сервера')

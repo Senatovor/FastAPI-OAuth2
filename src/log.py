@@ -62,11 +62,11 @@ def setup_logger():
 
     logger.add(
         Path(__file__).parent.parent / "app.log",
-        rotation=config.ROTATION,
-        level=config.LEVEL,
-        backtrace=config.BACKTRACE,
-        diagnose=config.DIAGNOSE,
-        enqueue=config.ENQUEUE,
-        catch=config.CATCH,
-        compression=config.COMPRESSION,
+        rotation=config.logger_config.ROTATION,
+        level=config.logger_config.LEVEL,
+        backtrace=config.logger_config.BACKTRACE,
+        diagnose=config.logger_config.DIAGNOSE,
+        enqueue=config.logger_config.ENQUEUE,
+        catch=config.logger_config.CATCH,
+        compression=config.logger_config.COMPRESSION,
     )
