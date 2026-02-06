@@ -1,6 +1,5 @@
 import asyncio
 import subprocess
-
 from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
@@ -10,6 +9,11 @@ from src.auth_api.models import User
 from src.config import config
 from src.database.executer import sql_manager
 from src.database.session import session_manager
+from src.auth_api.schemes import RegistrateUserScheme
+
+
+class AdminCreateScheme(RegistrateUserScheme):
+    is_superuser: bool = True
 
 
 async def check_and_create_migrations():
@@ -46,15 +50,14 @@ async def create_admin(db_session: AsyncSession):
     ).scalar_one_or_none(db_session)
 
     if not admin:
-        register_user = {
-            "username": config.ADMIN_NAME,
-            "email": config.ADMIN_EMAIL,
-            "password": config.ADMIN_PASSWORD,
-            "is_superuser": True,
-        }
-        register_user['password'] = await AuthHandler.get_password_hash(register_user.password)
+        register_user = AdminCreateScheme(
+            username=config.ADMIN_NAME,
+            email=config.ADMIN_EMAIL,
+            password=config.ADMIN_PASSWORD
+        )
+        register_user.password = await AuthHandler.get_password_hash(register_user.password)
         await sql_manager(
-            insert(User).values(**register_user)
+            insert(User).values(**register_user.model_dump())
         ).execute(db_session)
         logger.success("Администратор создан успешно")
     else:

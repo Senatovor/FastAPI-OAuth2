@@ -5,8 +5,8 @@ from typing import Annotated
 
 from ..database.session import DbSessionDepends
 from .service import AuthService
-from .schemes import RegistrateUser
-from .schemes import Token
+from .schemes import RegistrateUserScheme
+from .schemes import TokenScheme
 
 auth_api_router = APIRouter(
     prefix='/auth_api',
@@ -14,17 +14,17 @@ auth_api_router = APIRouter(
 )
 
 
-@auth_api_router.post('/token', name='token', response_model=Token)
+@auth_api_router.post('/token', name='token', response_model=TokenScheme)
 async def token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         db_session: DbSessionDepends(),
-) -> Token:
+) -> TokenScheme:
     return await AuthService.get_token(form_data, db_session)
 
 
 @auth_api_router.post('/register', name='register', response_class=JSONResponse)
 async def register(
-        register_user: RegistrateUser,
+        register_user: RegistrateUserScheme,
         session: DbSessionDepends(commit=True)
 ):
     return await AuthService.register(register_user, session)

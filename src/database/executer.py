@@ -1,11 +1,11 @@
 from sqlalchemy import Result
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from loguru import logger
-from typing import Optional, Type, Sequence
+from typing import Optional, Type, Sequence, TypeVar
 
-from app.database.model import Base
+from src.database.model import Base
 
+ModelType = TypeVar("ModelType", bound=Base)
 
 class QueryWrapper:
     """
@@ -45,7 +45,7 @@ class QueryWrapper:
         result = await session.execute(self.query)
         return result
 
-    async def scalar_one_or_none(self, session: AsyncSession) -> Optional[Type[Base]]:
+    async def scalar_one_or_none(self, session: AsyncSession) -> Optional[ModelType]:
         """
         Выполняет запрос и возвращает один скалярный результат или None.
 
@@ -62,7 +62,7 @@ class QueryWrapper:
         result = await self.execute(session)
         return result.scalar_one_or_none()
 
-    async def first(self, session: AsyncSession) -> Optional[Type[Base]]:
+    async def first(self, session: AsyncSession) -> Optional[ModelType]:
         """
         Выполняет запрос и возвращает первую строку результата или None.
 
@@ -78,7 +78,7 @@ class QueryWrapper:
         result = await self.execute(session)
         return result.first()
 
-    async def all(self, session: AsyncSession) -> Sequence[Type[Base]]:
+    async def all(self, session: AsyncSession) -> Sequence[ModelType]:
         """
         Выполняет запрос и возвращает все строки результата.
 

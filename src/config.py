@@ -1,4 +1,5 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import EmailStr, HttpUrl
 from pathlib import Path
@@ -69,9 +70,6 @@ class Config(BaseSettings):
     DOCS_URL: str | None = None
     REDOC_URL: str | None = None
 
-    # Время
-    UTC_DELTA: int
-
     ADMIN_NAME: str
     ADMIN_EMAIL: str
     ADMIN_PASSWORD: str
@@ -97,8 +95,8 @@ class Config(BaseSettings):
         }
 
     @property
-    def get_current_time(self) -> datetime:
-        return datetime.now(timezone(offset=timedelta(hours=self.UTC_DELTA)))
+    def get_moscow_time(self) -> datetime:
+        return datetime.now(ZoneInfo("Europe/Moscow"))
 
 
 try:

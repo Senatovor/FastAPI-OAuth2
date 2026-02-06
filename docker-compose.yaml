@@ -14,8 +14,8 @@ services:
     networks:
       - app-network
 
-  app:
-    container_name: 'app'
+  src:
+    container_name: 'src'
     build:
       dockerfile: Dockerfile
     ports:

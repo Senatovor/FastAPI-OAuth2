@@ -7,12 +7,12 @@ class SystemUserScheme(BaseModel):
     email: EmailStr = Field(..., description='Почта пользователя')
 
 
-class RegistrateUser(SystemUserScheme):
+class RegistrateUserScheme(SystemUserScheme):
     """Форма регистрации пользователя"""
     password: SecretStr = Field(..., description='Введенный пароль, в дальнейшем хэшируется')
 
 
-class Token(BaseModel):
+class TokenScheme(BaseModel):
     """Модель токена аунтефикации"""
     access_token: str = Field(..., description='Токен')
     token_type: str = Field(..., description='Тип токена')

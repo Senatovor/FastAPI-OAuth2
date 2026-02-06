@@ -22,7 +22,7 @@ NotAuthException = HTTPException(
 async def get_current_user(
         token: Annotated[str, Depends(oauth2_scheme)],
         db_session: DbSessionDepends()
-):
+) -> User:
     """Получает текущего пользователя по JWT токену.
 
     Args:

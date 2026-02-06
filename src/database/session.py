@@ -146,12 +146,12 @@ class DatabaseSessionManager:
                 start_time = datetime.now()
                 logger.info(
                     f"Начало транзакции для {method.__name__}. Изоляция: {isolation_level}, Автокоммит: {commit}")
-                async with self.session_factory() as session:  # type: ignore
+                async with self.session_factory() as session:
                     try:
                         if isolation_level:
                             logger.debug(f"Установка уровня изоляции: {isolation_level}")
                             await session.execute(text(f"SET TRANSACTION ISOLATION LEVEL {isolation_level}"))
-                        result = await method(*args, session=session, **kwargs)
+                        result = await method(*args, db_session=session, **kwargs)
                         if commit:
                             await session.commit()
                             logger.info("Изменения успешно закоммичены")
