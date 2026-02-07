@@ -1,7 +1,9 @@
+from argon2.exceptions import VerifyMismatchError, VerificationError
+from loguru import logger
 from pydantic import SecretStr
 from datetime import datetime, timedelta, timezone
 from jose import jwt
-from passlib.context import CryptContext
+from argon2 import PasswordHasher
 
 from ..config import config
 
@@ -12,7 +14,7 @@ class AuthHandler:
     Attributes:
         _pwd_context: Контекст для хеширования паролей (использует bcrypt)
     """
-    _pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
+    _pwd_context = PasswordHasher()
 
     @classmethod
     async def get_password_hash(cls, password: SecretStr) -> str:
@@ -41,7 +43,16 @@ class AuthHandler:
         Returns:
             bool: True если пароль верный, иначе False
         """
-        return cls._pwd_context.verify(plain_password, hashed_password)
+        try:
+            return cls._pwd_context.verify(hashed_password, plain_password)
+        except VerifyMismatchError:
+            return False
+        except VerificationError as e:
+            logger.error(f"Ошибка верификации пароля: {e}")
+            return False
+        except Exception as e:
+            logger.error(f"Неожиданная ошибка при проверке пароля: {e}")
+            return False
 
     @staticmethod
     async def encode_jwt(
