@@ -1,8 +1,8 @@
-"""add users model
+"""new models
 
-Revision ID: e21427ece2ba
+Revision ID: 36b5774d0b57
 Revises: 
-Create Date: 2026-02-06 14:12:07.374781
+Create Date: 2026-02-07 15:33:53.634707
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e21427ece2ba'
+revision: str = '36b5774d0b57'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -25,7 +25,7 @@ def upgrade() -> None:
     sa.Column('username', sa.String(), nullable=False),
     sa.Column('email', sa.String(), nullable=False),
     sa.Column('password', sa.String(), nullable=False),
-    sa.Column('is_superuser', sa.Boolean(), server_default=sa.text('false'), nullable=False),
+    sa.Column('scopes', sa.ARRAY(sa.String()), server_default=sa.text("ARRAY['user:all']"), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),

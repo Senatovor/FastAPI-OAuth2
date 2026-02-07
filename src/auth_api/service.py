@@ -39,9 +39,18 @@ class AuthService:
             if not await AuthHandler.verify_password(form_data.password, user.password):
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Неверный пароль')
 
+            requested_scopes = form_data.scopes
+            for requested_scope in requested_scopes:
+                if not requested_scope in user.scopes:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail='Вы не можете запросить прав, которых у вас нету'
+                    )
+
             access_token = await AuthHandler.create_token(
                 data={
                     "sub": user.email,
+                    "scope": " ".join(form_data.scopes)
                 },
                 timedelta_minutes=config.auth_config.ACCESS_TOKEN_EXPIRE
             )
@@ -50,6 +59,8 @@ class AuthService:
                 access_token=access_token,
                 token_type='Bearer'
             )
+        except HTTPException:
+            raise
         except Exception:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Ошибка сервера')
 
@@ -77,7 +88,7 @@ class AuthService:
 
             logger.info(f'Пользователь {user.username} зарегистрирован')
             return JSONResponse(
-                content={"message": 'Вы авторизированны'},
+                content={"message": 'Вы зарегистрированы'},
                 status_code=status.HTTP_200_OK
             )
 
