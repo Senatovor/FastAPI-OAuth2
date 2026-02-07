@@ -8,9 +8,9 @@ class AuthConfig(BaseSettings):
     Загружает настройки из .env файла или переменных окружения.
 
     Attributes:
-        SECRET_KEY: Секретный ключ для JWT
-        ALGORITHM: Алгоритм шифрования JWT
-        ACCESS_TOKEN_EXPIRE: Время жизни access токена (в минутах)
+        SECRET_KEY(str): Секретный ключ для JWT
+        ALGORITHM(str): Алгоритм шифрования JWT
+        ACCESS_TOKEN_EXPIRE(int): Время жизни access токена (в минутах)
     """
     # Настройки аутентификации
     SECRET_KEY: str

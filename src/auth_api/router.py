@@ -19,6 +19,19 @@ async def token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
         db_session: DbSessionDepends(),
 ) -> TokenScheme:
+    """Выпускает JWT токен доступа при успешной аутентификации.
+
+    Args:
+        form_data (OAuth2PasswordRequestForm): Данные формы с логином и паролем
+        db_session (AsyncSession): Сессия базы данных
+
+    Returns:
+        TokenScheme: Объект с JWT токеном доступа и типом токена
+
+    Raises:
+        HTTPException(401): Если пользователь не найден или пароль неверный
+        HTTPException(500): При внутренней ошибке сервера
+    """
     return await AuthService.get_token(form_data, db_session)
 
 
@@ -27,4 +40,17 @@ async def register(
         register_user: RegistrateUserScheme,
         session: DbSessionDepends(commit=True)
 ):
+    """Регистрирует нового пользователя в системе.
+
+    Args:
+        register_user (RegistrateUserScheme): Данные для регистрации пользователя
+        session (AsyncSession): Сессия базы данных с авто-коммитом
+
+    Returns:
+        JSONResponse: Сообщение об успешной регистрации
+
+    Raises:
+        HTTPException(409): Если пользователь с таким именем уже существует
+        HTTPException(500): При внутренней ошибке сервера
+    """
     return await AuthService.register(register_user, session)

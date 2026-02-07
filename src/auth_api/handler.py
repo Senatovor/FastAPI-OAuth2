@@ -102,7 +102,6 @@ class AuthHandler:
         Args:
             data: Основные данные токена (будет добавлены exp и session_id)
             timedelta_minutes: Время жизни токена в минутах (по умолчанию из config)
-            token_type: Тип токена
 
         Returns:
             str: Получившийся токен

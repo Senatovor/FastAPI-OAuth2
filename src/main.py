@@ -36,7 +36,6 @@ async def lifespan(app: FastAPI):
     yield
 
     # Очистка
-    await app.state.redis_manager.close()
     await app.state.db_manager.close()
 
 

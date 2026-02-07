@@ -16,9 +16,22 @@ from ..database.executer import sql_manager
 class AuthService:
     @staticmethod
     async def get_token(form_data: OAuth2PasswordRequestForm, db_session: AsyncSession):
+        """Аутентифицирует пользователя и генерирует JWT токен доступа.
+
+        Args:
+            form_data (OAuth2PasswordRequestForm): Данные формы с логином и паролем
+            db_session (AsyncSession): Сессия базы данных
+
+        Returns:
+            TokenScheme: Объект с JWT токеном доступа
+
+        Raises:
+            HTTPException(401): Если пользователь не найден или пароль неверный
+            HTTPException(500): При внутренней ошибке сервера
+        """
         try:
             user = await sql_manager(
-                select(User).where(User.username == form_data.username)
+                select(User).where(User.email == form_data.username)
             ).scalar_one_or_none(db_session)
 
             if not user:
@@ -28,7 +41,7 @@ class AuthService:
 
             access_token = await AuthHandler.create_token(
                 data={
-                    "sub": user.username,
+                    "sub": user.email,
                 },
                 timedelta_minutes=config.auth_config.ACCESS_TOKEN_EXPIRE
             )
@@ -42,6 +55,19 @@ class AuthService:
 
     @staticmethod
     async def register(register_user: RegistrateUserScheme, db_session: AsyncSession):
+        """Создает нового пользователя в базе данных.
+
+        Args:
+            register_user (RegistrateUserScheme): Данные для регистрации
+            db_session (AsyncSession): Сессия базы данных
+
+        Returns:
+            JSONResponse: Ответ об успешной регистрации
+
+        Raises:
+            HTTPException(409): При нарушении уникальности (дубликат пользователя)
+            HTTPException(500): При других ошибках базы данных или сервера
+        """
         try:
             register_user.password = await AuthHandler.get_password_hash(register_user.password)
 

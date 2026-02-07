@@ -8,11 +8,11 @@ class DatabaseConfig(BaseSettings):
     Загружает настройки из .env файла или переменных окружения.
 
     Attributes:
-        DB_HOST: Хост базы данных
-        DB_PORT: Порт базы данных
-        POSTGRES_DB: Имя базы данных
-        POSTGRES_USER: Пользователь БД
-        POSTGRES_PASSWORD: Пароль пользователя БД
+        DB_HOST(str): Хост базы данных
+        DB_PORT(str): Порт базы данных
+        POSTGRES_DB(str): Имя базы данных
+        POSTGRES_USER(str): Пользователь БД
+        POSTGRES_PASSWORD(str): Пароль пользователя БД
     """
     # Настройки базы данных
     DB_HOST: str

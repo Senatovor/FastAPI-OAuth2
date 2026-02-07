@@ -12,4 +12,5 @@ users_router = APIRouter(
 
 @users_router.get('/info', name='users-info', response_model=SystemUserScheme)
 async def user_info(user: Annotated[SystemUserScheme, Depends(get_current_user)]):
+    """Получить основную информацию об авторизированном юзере"""
     return user

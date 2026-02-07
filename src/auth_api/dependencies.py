@@ -26,8 +26,8 @@ async def get_current_user(
     """Получает текущего пользователя по JWT токену.
 
     Args:
-        token: JWT токен
-        db_session: Сессия базы данных
+        token(str): JWT токен
+        db_session(AsyncSession): Сессия базы данных
 
     Returns:
         Объект пользователя
@@ -37,13 +37,13 @@ async def get_current_user(
     """
     try:
         payload = await AuthHandler.decode_jwt(token)
-        username = payload.get('sub')
-        if username is None:
+        email = payload.get('sub')
+        if email is None:
             raise NotAuthException
     except JWTError as e:
         logger.error(f'Во время декодирования произошла ошибка: {e}')
         raise NotAuthException
-    user = await sql_manager(select(User).where(User.username == username)).scalar_one_or_none(db_session)
+    user = await sql_manager(select(User).where(User.email == email)).scalar_one_or_none(db_session)
     if user is None:
         logger.error('Не найден пользователь')
         raise NotAuthException
